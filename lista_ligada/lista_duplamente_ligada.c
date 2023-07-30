@@ -76,6 +76,39 @@ void insert_at(ll_int list, int value, int index){
     
 }
 
+void insert(ll_int list, int value){
+    struct ll_node_int *new_node = (struct ll_node_int*)malloc(sizeof(struct ll_node_int));
+    struct ll_node_int *current = list->head;
+    new_node->value = value;
+    
+    if (new_node->value < current->value) {
+        new_node->prox = current;
+        new_node->prev = NULL;
+        current->prev = new_node;
+        list->head = new_node;
+        return;
+    }
+
+    while (current != NULL) {
+        if (new_node->value <= current->value) {
+            new_node->prox = current;
+            new_node->prev = current->prev;
+            if (current->prev != NULL) {
+                current->prev->prox = new_node;
+            }
+            current->prev = new_node;
+            return;
+        }
+        current = current->prox;
+    }
+
+    // Caso em que o novo nó tem o maior valor da lista
+    new_node->prox = NULL;
+    new_node->prev = list->tail;
+    list->tail->prox = new_node;
+    list->tail = new_node;
+}
+
 void print(ll_int l){
     struct ll_node_int *current;
     current = l->head;
@@ -93,13 +126,19 @@ int main(){
     struct ll_int *list = (struct ll_int*)malloc(sizeof(struct ll_int));
     list->head = 0;
     list->tail = 0;
-    inserir_inicio(list, 10);
-    inserir_inicio(list, 20);
-    inserir_inicio(list, 30);
-    inserir_inicio(list, 40);
-    inserir_fim(list, 35);
+    for(int i = 10; i <= 100; i = i + 10){
+        inserir_fim(list, i);
+    }
     print(list);
-    insert_at(list, 22, 2);
-    print(list);
+    printf("\n");
+    int n;
+    while(n !=0){
+        scanf("%d", &n);
+        insert(list, n);
+        print(list);
+        printf("\n");
+    }
+    
+    
     return 0;
 }
